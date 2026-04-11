@@ -18,6 +18,9 @@
 
         <button type="submit">Cari</button>
         <a href="<?= base_url('users') ?>">Reset</a>
+        <a href="<?= base_url('users/print?' . http_build_query($_GET)) ?>" target="_blank">
+            Print
+        </a>
     </form>
 
     <br>
@@ -61,7 +64,9 @@
 
                         <?php if (session()->get('role') == 'admin') : ?>
                             <td>
+                                <a href="<?= base_url('users/detail/' . $u['id']) ?>">Detail</a>
                                 <a href="<?= base_url('users/edit/' . $u['id']) ?>">Edit</a>
+                                <a href="<?= base_url('users/wa/' . $u['id']) ?>" target="_blank">Kirim WA</a>
                                 <a href="<?= base_url('users/delete/' . $u['id']) ?>"
                                     onclick="return confirm('Hapus user ini?')">Hapus</a>
                             </td>

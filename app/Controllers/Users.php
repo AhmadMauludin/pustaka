@@ -139,4 +139,57 @@ class Users extends BaseController
         return redirect()->to('/users')->with('success', 'User berhasil dihapus!');
     }
     // sampai sini
+
+    public function detail($id)
+    {
+        $user = $this->users->find($id);
+
+        if (!$user) {
+            return redirect()->to('/users')->with('error', 'Data tidak ditemukan');
+        }
+
+        return view('users/detail', ['user' => $user]);
+    }
+
+    public function print()
+    {
+        $keyword = $this->request->getGet('keyword');
+        $role = $this->request->getGet('role');
+
+        $builder = $this->users;
+
+        if ($keyword) {
+            $builder = $builder->like('nama', $keyword);
+        }
+
+        if ($role) {
+            $builder = $builder->where('role', $role);
+        }
+
+        $data['users'] = $builder->findAll();
+
+        return view('users/print', $data);
+    }
+
+    public function wa($id)
+    {
+        $user = $this->users->find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+
+        // format pesan
+        $pesan = "DATA USER\n\n";
+        $pesan .= "ID: " . $user['id'] . "\n";
+        $pesan .= "Nama: " . $user['nama'] . "\n";
+        $pesan .= "Email: " . $user['email'] . "\n";
+        $pesan .= "Username: " . $user['username'] . "\n";
+        $pesan .= "Role: " . ucfirst($user['role']) . "\n";
+
+        // encode URL
+        $url = "https://wa.me/6285175017991?text=" . urlencode($pesan);
+
+        return redirect()->to($url);
+    }
 }
